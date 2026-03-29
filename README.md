@@ -14,6 +14,20 @@
 Az itt közölt adatok, kódok és fejlesztési utmutatók csak tájékoztató jellegűek, főként saját magamnak
 szántam, felelősséget és garanciát értük nem vállalok.
 
+# Előzmények
+Korábban egy gázkazános rendszerhez készítettem egy E-Paper-es kijelzéssel megoldott információs kijelzést, amelyet itt, ezen a szálon tudtok 
+visszanézni: https://github.com/DPTPSystem/Q3RF_SignalMonitoring
+Pár képet azért itt is megosztok az előzményről, melyet végül egyébb okok miatt nem üzemeltem be, bár elkészült 99%-ban.
+
+![CC1101](https://github.com/DPTPSystem/Q3RF_SignalMonitoring/blob/master/images/p2.jpg "Padlófátés és hőfok/páratartalom figyelő")
+
+És a kész projekt kijelzése:
+
+![DPTP System](https://github.com/DPTPSystem/Q3RF_SignalMonitoring/blob/master/images/dptpsystem_epaper_0.jpg "DPTP System")
+
+![DPTP System](https://github.com/DPTPSystem/Q3RF_SignalMonitoring/blob/master/images/dptpsystem_epaper_1.jpg "DPTP System")
+
+
 # Az eszköz működése
 ...
 
