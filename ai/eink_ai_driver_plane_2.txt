@@ -1,0 +1,156 @@
+E‑PAPER UI RENDSZER – FEJLESZTÉSI KIVONAT (TXT FORMÁTUM)
+
+Hardver:
+
+    STM32F103C8T6 MCU
+
+    7.5" E‑Paper kijelző (GDEY075T7‑T01, UC8179 vezérlő)
+
+    GT911 kapacitív érintőpanel
+
+    SPI kommunikáció a kijelzővel, I2C az érintővel
+
+Cél:
+
+Több lapos (page‑es) UI rendszer létrehozása, statikus háttérképekkel és részleges frissítéssel, érintési interakciókkal.
+Alapelvek:
+
+    Minden UI lap külön struktúrában él.  
+    Egy lap tartalmazza:
+
+        háttérkép pointer
+
+        frissítendő mezők listája (0–N db)
+
+        érintési területek listája (0–N db)
+
+        mezők száma
+
+        érintési területek száma
+
+        auto_refresh_enabled (true/false)
+
+    Az aktív lapot egy pointer jelöli:  
+    active_page → mindig az aktuális lapra mutat.
+
+    Lapváltás menete:
+
+        active_page átállítása
+
+        háttérkép kirajzolása (full update)
+
+        mezők last_value törlése
+
+        frissítési ciklus már az új lap mezőit kezeli
+
+    Háttérkép kirajzolása külön függvényben történik.  
+    Nem része az inicializálásnak, mert lapváltáskor is kell.
+
+    Részleges frissítés csak a mezőkben történik.  
+    A mezők téglalapok (x, y, w, h), saját bufferrel és last_value‑val.
+
+    Érintési területek (touch zones):  
+    Téglalapok (x, y, w, h) callbackkel.
+    A GT911 koordinátái alapján aktiválódnak.
+
+    Frissítési idő globális beállítás:  
+    ui_config.refresh_interval_ms
+    Alapértelmezett: 1000 ms (#define)
+    Később flash‑be menthető.
+
+    Lapfüggő frissítési logika:
+
+        főlap: van automatikus frissítés
+
+        beállítások lap: nincs automatikus frissítés
+
+        grafikon lap: lehet mindkettő
+
+    Fontkezelés:
+
+        egyetlen fonttípus
+
+        több előre generált méret (12, 16, 20, 24, 32, 48 px)
+
+        mezők struktúrájában font_size mező
+
+        bitmap fontok előre generálva (nem futás közben)
+
+Fejlesztési lépések (modulárisan, egymásra építve):
+
+    E‑ink alap inicializálás + "Hello World"
+
+        SPI kommunikáció
+
+        BUSY jel kezelése
+
+        alap LUT betöltése
+
+        minimális szöveg kirajzolása
+
+    Háttérkép kirajzolása (full update)
+
+        BMP → C buffer
+
+        teljes képernyő kirajzolása
+
+        lapváltás támogatása
+
+    Mező frissítése (partial update)
+
+        mező buffer
+
+        változásfigyelés
+
+        részleges frissítés ablakkezelése
+
+    GT911 érintőpanel inicializálása
+
+        I2C kommunikáció
+
+        koordináták olvasása
+
+        orientáció helyes kezelése
+
+    Érintési terület → akció
+
+        touch_zones listája
+
+        zóna felismerése
+
+        callback meghívása
+
+        lapváltás tesztelése
+
+    Teljes rendszer összeépítése
+
+        több lap
+
+        mezők + érintés együtt
+
+        frissítési idő kezelése
+
+        fontok integrálása
+
+        végső UI működés
+
+Végső rendszer tulajdonságai:
+
+    több UI lap, mindegyik saját háttérképpel
+
+    részleges frissítés a dinamikus mezőkben
+
+    érintési területek lapfüggően
+
+    rugalmas frissítési idő
+
+    bitmap fontok több méretben
+
+    moduláris, külön fájlokba szervezett kód
+
+    könnyen bővíthető új lapokkal és mezőkkel
+
+Megjegyzés:
+
+Ez a kivonat a teljes projekt alapja.
+Ha később visszatöltöd, pontosan innen tudjuk folytatni a fejlesztést.

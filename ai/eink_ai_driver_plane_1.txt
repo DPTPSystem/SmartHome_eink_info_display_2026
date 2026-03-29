@@ -1,0 +1,193 @@
+MENTHETŐ PROJEKT‑KIVONAT (TXT FORMÁTUMRA OPTIMALIZÁLVA)
+
+Projekt: STM32F103 + 7.5" E‑Paper (GDEY075T7‑T01, UC8179) + GT911 érintőpanel
+Cél: Több lapos UI rendszer statikus háttérképpel és részleges frissítéssel
+1. HARDVER ALAPOK
+
+Kijelző:
+
+    Típus: GDEY075T7‑T01
+
+    Vezérlő: UC8179
+
+    Felbontás: 800×480
+
+    Támogatja a részleges frissítést (0.3 s)
+
+    SPI kommunikáció
+
+    BUSY jel kötelező figyelni
+
+Érintőpanel:
+
+    Kontroller: GT911
+
+    I²C kommunikáció
+
+    Koordináták fekvő módban egyeznek a kijelző orientációjával
+
+2. UI RENDSZER ALAPELVEI
+
+A rendszer több különálló „lapból” (page) áll.
+Minden lap teljesen önálló egység:
+
+    saját háttérképpel (800×480 BMP → C buffer)
+
+    saját frissítendő mezőkkel (0–N db)
+
+    saját érintési területekkel (0–N db)
+
+    saját logikával (pl. frissítés vagy csak interakció)
+
+A lapok között bármikor lehet váltani.
+3. UI PAGE STRUKTÚRA (KONCEPTUÁLIS)
+
+Egy lap tartalmazza:
+
+    background_image → pointer a háttérkép bufferre
+
+    fields[] → frissítendő mezők listája
+
+    touch_zones[] → érintési területek listája
+
+    field_count
+
+    touch_zone_count
+
+    auto_refresh_enabled (true/false)
+
+A mezők és érintési területek lapfüggők.
+4. AKTÍV LAP KEZELÉSE
+
+A UI rétegben:
+
+    active_page → pointer az aktuális lapra
+
+Lapváltáskor:
+
+    active_page = &másik_lap
+
+    ui_draw_background() → teljes frissítés
+
+    ui_reset_last_values() → mezők újra frissülnek
+
+    frissítési ciklus már az új lap mezőit kezeli
+
+5. HÁTTÉRKÉP KEZELÉSE
+
+A háttérkép NEM része az inicializálásnak.
+Külön függvény rajzolja ki:
+
+    ui_draw_background(page_id)
+
+Ez lehetővé teszi:
+
+    lapváltást,
+
+    visszalépést,
+
+    több külön háttérkép használatát.
+
+A háttérkép mindig full update.
+6. DINAMIKUS MEZŐK (RÉSZLEGES FRISSÍTÉS)
+
+A mezők:
+
+    téglalapok (x, y, w, h)
+
+    pointer egy változóra (float, int, stb.)
+
+    last_value → utolsó megjelenített érték
+
+    draw() → mező tartalmát bufferbe rajzoló callback
+
+A frissítési ciklus:
+
+    csak akkor frissít, ha az érték változott
+
+    epd_update_region() hívással részleges frissítés történik
+
+A mezők száma lapfüggő (0–10 vagy több).
+7. ÉRINTÉSI TERÜLETEK (TOUCH ZONES)
+
+Minden érintési terület:
+
+    téglalap (x, y, w, h)
+
+    callback függvény
+
+A GT911 olvasása után:
+
+    ui_process_touch(x, y)
+
+    végigmegy a touch_zones listán
+
+    ha beleesik → callback meghívása
+
+A beállítási lapokon csak érintési területek vannak.
+8. FRISSÍTÉSI IDŐ (KONFIGURÁLHATÓ)
+
+Globális beállítás:
+
+    ui_config.refresh_interval_ms
+
+Alapértelmezett értékek #define‑okkal:
+
+    UI_DEFAULT_REFRESH_MS = 1000 ms
+
+Később flash‑be menthető és visszatölthető.
+
+A lapváltás nem befolyásolja a frissítési időt.
+9. LAP TÍPUSOK
+
+1. Főlap (dashboard):
+
+    van automatikus frissítés
+
+    több mező (pl. hőmérséklet, feszültség, áram stb.)
+
+    kevés érintési terület (pl. beállítások ikon)
+
+2. Beállítások lap:
+
+    nincs automatikus frissítés
+
+    csak érintési területek
+
+    háttérkép statikus
+
+3. Egyéb lapok (grafikon, másodlagos főlap stb.):
+
+    tetszőleges kombináció
+
+    mezők és érintési területek lapfüggők
+
+10. RENDSZER MŰKÖDÉSE ÖSSZEFOGLALVA
+
+Inicializáláskor:
+
+    kijelző init
+
+    érintő init
+
+    konfiguráció betöltése
+
+    active_page = főlap
+
+    ui_draw_background()
+
+    mezők last_value törlése
+
+Folyamatos működés:
+
+    érintés olvasása → touch_zones callbackek
+
+    frissítési ciklus → mezők változásfigyelése → partial update
+
+Lapváltáskor:
+
+    active_page átállítása
+
+    háttérkép újrarajzolása
+
+    mezők újrainicializálása
