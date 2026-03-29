@@ -27,9 +27,16 @@ Pár képet azért itt is megosztok az előzményről, melyet végül egyébb ok
 
 ![DPTP System](https://github.com/DPTPSystem/Q3RF_SignalMonitoring/blob/master/images/dptpsystem_epaper_1.jpg "DPTP System")
 
-
 # Az eszköz működése
-...
+Működése egyszerű lesz, külső és belső szenzorokból beérkező jeleket feldolgozza és azt számunkra is érthető módon közli velünk. Mivel érintő képernyőnk lesz, 
+így könnyedén a képernyőt adott területen megéríntve egyes információkat, adatokat részleteiben is megjeleníthet. Főbb infórmációk, amelyeket látni szeretnénk
+valós időben:
+1. Külső hőmérséklet és páratartalom
+2. Belső, helységenkénti hőmérséklet és napali páratartalom
+3. Padlófűtés köreinek folyamatos hőmérséklet figyelése
+4. Pontos dátum és idő kijlezése
+5. Adatok elemzése és grafikus megjelenítése (7 napos külömbségek, de napi külömbségek grafikus megjelenítése)
+6. ...stb
 
 # Célkitűzés
 Fűtés és egyébb szenzorok adatainak megfigyelése és jel-feldolgozása, majd egy külön kijelzőn jelezni, hogy a fűtés rendszer aktív avagy sem.
