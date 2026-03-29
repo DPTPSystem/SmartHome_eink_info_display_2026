@@ -1,4 +1,4 @@
-# COMPUTHERM Q3RF
+# 7.5" Touch, E-ink smart display
 * DPTP System - 7.5" Touch, E-ink smart display
 * title:		main program, Smart display
 * autor:		DPTP System - Tóth Péter
