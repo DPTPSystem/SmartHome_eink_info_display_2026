@@ -2,7 +2,8 @@
 * DPTP System - 7.5" Touch, E-ink smart display
 * title:		main program, Smart display
 * autor:		DPTP System - Tóth Péter
-* pcb created:	2020.07.07.
+* project:		STM32F + 7.5" E-Paper (GDEY075T7‑T01, UC8179) + GT911 touch
+* pcb created:	...
 * date:			2026-03-29.
 * email:		don_peter[kukac]freemail[pont]hu
 * device:		Special adapter and develop device
